@@ -1,1 +1,13 @@
-/target/
+# Ignora archivos sensibles
+dbconfig.properties
+
+# Archivos de IDE
+.idea/
+*.iml
+*.class
+target/
+out/
+
+# OS-specific
+.DS_Store
+Thumbs.db
