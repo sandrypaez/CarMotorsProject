@@ -73,27 +73,54 @@ mysql -u root -p carmotorsdb < sql/data.sql
 ## 🗃️ Estructura del Proyecto
 
 ```
-CarMotors/
-├── pom.xml
-├── .gitignore
-├── dbconfig.properties              # ⚠️ NO subir este archivo
-├── sql/
-│   ├── schema.sql
-│   ├── data.sql
-│   └── functions.sql
-└── src/
-└── main/
-├── java/
-│   └── com/
-│       └── carmotors/
-│           ├── CarMotors.java
-│           ├── controller/
-│           ├── model/
-│           │   ├── entities/
-│           │   └── dao/
-│           ├── view/
-│           └── utils/
-└── resources/
+Estructura:
+
+STA_CarMotors/
+│
+├── src/main/java/
+│   └── com/mycompany/sta_carmotors/
+│       ├── STA_CarMotors.java         # Clase principal de ejecución
+│       ├── database/
+│       │   ├── DatabaseConnection.java    # Manejo de la conexión a MySQL
+│       │   └── DatabaseInitializer.java   # Creación automática de tablas si no existen
+│       ├── models/
+│       │   ├── Cliente.java               # Entidad Cliente
+│       │   ├── Vehiculo.java              # Entidad Vehículo
+│       │   ├── Repuesto.java              # Entidad Repuesto
+│       │   ├── Servicio.java              # Entidad Servicio de Mantenimiento
+│       │   └── Proveedor.java             # Entidad Proveedor
+│       ├── dao/
+│       │   ├── ClienteDAO.java            # Operaciones CRUD para clientes
+│       │   ├── VehiculoDAO.java           # Operaciones CRUD para vehículos
+│       │   ├── RepuestoDAO.java           # Operaciones CRUD para repuestos
+│       │   ├── ServicioDAO.java           # Operaciones CRUD para servicios
+│       │   └── ProveedorDAO.java          # Operaciones CRUD para proveedores
+│       ├── utils/
+│       │   ├── PDFGenerator.java          # Generador de facturas electrónicas (PDF)
+│       │   └── Logger.java                # Gestión de logs de la aplicación
+│       └── ui/
+│           ├── MainMenu.java              # Menú principal de usuario
+│           └── Screens/                   # Pantallas específicas para Inventario, Mantenimiento, Facturación, etc.
+│
+├── src/main/resources/
+│   ├── log4j2.xml                         # Configuración de Log4j
+│   ├── database.properties                # Credenciales y configuración de conexión MySQL
+│   └── templates/
+│       └── factura_template.pdf            # Plantilla base para las facturas
+│
+├── src/test/java/
+│   └── com/mycompany/sta_carmotors/
+│       └── tests/
+│           ├── ClienteDAOTest.java         # Pruebas unitarias para DAO de clientes
+│           ├── RepuestoDAOTest.java        # Pruebas unitarias para DAO de repuestos
+│           └── ... otros tests
+│
+├── pom.xml                                 # Configuración del proyecto Maven
+├── README.md                               # Documentación principal
+└── scripts/
+    ├── create_database.sql                 # Script para crear la base de datos MySQL
+    ├── insert_sample_data.sql              # Script para insertar datos de prueba
+    └── drop_database.sql                   # Script para eliminar la base de datos
 ```
 
 ---
