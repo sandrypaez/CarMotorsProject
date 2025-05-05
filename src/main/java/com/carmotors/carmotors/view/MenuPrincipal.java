@@ -20,6 +20,7 @@ public class MenuPrincipal extends JFrame {
         setLayout(new BorderLayout());
 
         // Encabezado superior
+        
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(new Color(25, 118, 210));
         header.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -29,6 +30,8 @@ public class MenuPrincipal extends JFrame {
         titulo.setHorizontalAlignment(JLabel.CENTER);
         header.add(titulo, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
+        
+        
 
         // Panel central con botones
         JPanel panelBotones = new JPanel();
@@ -71,6 +74,8 @@ public class MenuPrincipal extends JFrame {
     }
 
     private JButton crearBoton(String texto) {
+        
+        
         JButton boton = new JButton(texto);
         boton.setFont(new Font("Segoe UI", Font.BOLD, 18));
         boton.setFocusPainted(false);
@@ -85,6 +90,7 @@ public class MenuPrincipal extends JFrame {
         boton.setPreferredSize(new Dimension(250, 45));
         return boton;
     }
+    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MenuPrincipal().setVisible(true));

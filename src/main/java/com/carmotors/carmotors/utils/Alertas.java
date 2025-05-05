@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Properties;
 
 public class Alertas {
+
     private String correoOrigen;
     private String contrasena;
 
@@ -21,8 +22,8 @@ public class Alertas {
         LocalDate hoy = LocalDate.now();
         for (Cliente cliente : clientes) {
             try {
-                if (cliente.getFechaCompra() != null &&
-                    cliente.getFechaCompra().plusDays(2).equals(hoy)) {
+                if (cliente.getFechaCompra() != null
+                        && cliente.getFechaCompra().plusDays(2).equals(hoy)) {
                     enviarCorreo(cliente);
                 }
             } catch (Exception e) {
@@ -33,11 +34,11 @@ public class Alertas {
 
     private void enviarCorreo(Cliente cliente) {
         String asunto = "¡Gracias por tu compra!";
-        String cuerpo = "Hola " + cliente.getName() + ",\n\n" +
-                "Han pasado 2 días desde tu compra y queremos agradecerte.\n\n" +
-                "¡Tienes " + cliente.getRewardPoints() + " puntos acumulados en tu cuenta!\n" +
-                "Aprovecha nuestras nuevas promociones exclusivas para ti.\n\n" +
-                "¡Gracias por confiar en nosotros!";
+        String cuerpo = "Hola " + cliente.getName() + ",\n\n"
+                + "Han pasado 2 días desde tu compra y queremos agradecerte.\n\n"
+                + "¡Tienes " + cliente.getRewardPoints() + " puntos acumulados en tu cuenta!\n"
+                + "Aprovecha nuestras nuevas promociones exclusivas para ti.\n\n"
+                + "¡Gracias por confiar en nosotros!";
 
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
