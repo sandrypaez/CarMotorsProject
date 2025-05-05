@@ -70,7 +70,7 @@ public class MenuPrincipal extends JFrame {
         btnMantenimiento.addActionListener(e -> new OrdenServicioView().setVisible(true));
         btnClientesFact.addActionListener(e -> new MainMenu().setVisible(true));
         btnProveedores.addActionListener(e -> new MenuComprasProvedor().setVisible(true));
-        btnReportes.addActionListener(e -> new FacturaView().setVisible(true));
+        btnReportes.addActionListener(e -> new ReporteView().setVisible(true));
     }
 
     private JButton crearBoton(String texto) {
