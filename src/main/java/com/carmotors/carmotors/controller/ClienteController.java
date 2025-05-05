@@ -110,7 +110,7 @@ public class ClienteController {
             @Override
             public void run() {
                 System.out.println(message + " on " + new Date());
-                // Add notification logic (e.g., email or popup)
+                
             }
         }, scheduleDate);
     }
