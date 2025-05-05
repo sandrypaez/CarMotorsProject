@@ -16,7 +16,6 @@
 </properties>
 
 
-
     <dependencies>
         <dependency>
             <groupId>com.sun.mail</groupId>
