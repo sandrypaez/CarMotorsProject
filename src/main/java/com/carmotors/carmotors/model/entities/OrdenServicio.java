@@ -10,7 +10,7 @@ public class OrdenServicio {
     private String estado;
     private Date fechaInicio;
     private Date fechaFin;
-
+  private int vehicleId;
     public OrdenServicio() {
     }
 
@@ -73,9 +73,16 @@ public class OrdenServicio {
     }
 
     // Métodos que aún no están implementados
-    public void setVehicleId(int aInt) {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
+ 
+
+public void setVehicleId(int id) {
+    this.vehicleId = id;
+}
+
+public int getVehicleId() {
+    return vehicleId;
+}
+
 
     public void setClientId(int clientId) {
         throw new UnsupportedOperationException("Not implemented yet.");

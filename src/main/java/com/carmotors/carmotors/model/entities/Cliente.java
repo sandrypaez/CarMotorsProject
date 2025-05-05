@@ -2,6 +2,9 @@ package com.carmotors.carmotors.model.entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+
+import java.time.LocalDate;
 
 public class Cliente {
     private int id;
@@ -41,6 +44,18 @@ public class Cliente {
         this.rewardPoints = 0;
         this.serviceHistory = new ArrayList<>();
     }
+
+
+
+private LocalDate fechaCompra; // ⬅️ Campo nuevo
+
+public LocalDate getFechaCompra() {
+    return fechaCompra;
+}
+
+public void setFechaCompra(LocalDate fechaCompra) {
+    this.fechaCompra = fechaCompra;
+}
 
     // Getters y setters
     public int getId() {

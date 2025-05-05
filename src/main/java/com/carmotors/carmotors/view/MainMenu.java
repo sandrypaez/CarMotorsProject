@@ -1,61 +1,66 @@
 package com.carmotors.carmotors.view;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class MainMenu extends JFrame {
 
     public MainMenu() {
-        setTitle("🏠 Menú Principal - CarMotors");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(400, 300);
+        setTitle("CarMotors - Menú Principal");
+        setSize(420, 300);
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setResizable(false);
+        
 
+        // Encabezado
+        JLabel titulo = new JLabel("🚗 CarMotors", SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titulo.setForeground(new Color(25, 118, 210));
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
+        add(titulo, BorderLayout.NORTH);
+
+        // Panel de botones
         JPanel panel = new JPanel();
-        panel.setBackground(Color.decode("#e6f0ff"));  // azul muy claro
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        panel.setLayout(new GridLayout(2, 1, 20, 20));
+        panel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+        panel.setBackground(Color.decode("#E3F2FD"));
 
-        JLabel title = new JLabel("🚗 CarMotors - Sistema de Gestión");
-        title.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JButton btnCliente = new JButton("👤  Registrar Cliente");
+        JButton btnFactura = new JButton("🧾  Generar Factura");
 
-        JButton btnCliente = new JButton("👤 Registro de Cliente");
-        JButton btnFactura = new JButton("🧾 Generar Factura");
+        estilizarBoton(btnCliente);
+        estilizarBoton(btnFactura);
 
-        stylizeButton(btnCliente);
-        stylizeButton(btnFactura);
-
-        panel.add(title);
-        panel.add(Box.createVerticalStrut(30));
         panel.add(btnCliente);
-        panel.add(Box.createVerticalStrut(15));
         panel.add(btnFactura);
+        add(panel, BorderLayout.CENTER);
 
-        add(panel);
-
-        // 👉 Acciones
-        btnCliente.addActionListener(e -> {
-            dispose(); // Cierra el menú
-            SwingUtilities.invokeLater(() -> new ClienteView().setVisible(true));
-        });
-
-        btnFactura.addActionListener(e -> {
-            dispose(); // Cierra el menú
-            SwingUtilities.invokeLater(() -> new FacturaView().setVisible(true));
-        });
+        // Acciones
+        btnCliente.addActionListener(e -> new ClienteView().setVisible(true));
+        btnFactura.addActionListener(e -> new FacturaView().setVisible(true));
     }
+   
 
-    private void stylizeButton(JButton button) {
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setBackground(new Color(0, 102, 204));
-        button.setForeground(Color.WHITE);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setFocusPainted(false);
-        button.setMaximumSize(new Dimension(220, 40));
-    }
+ 
+    private void estilizarBoton(JButton boton) {
+                boton.setBackground(new Color(33, 150, 243));
+                boton.setForeground(Color.WHITE);
+                boton.setFocusPainted(false);
+                boton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                boton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+                boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
-    }
-}
+            public static void main(String[] args) {
+                try {
+                    UIManager.setLookAndFeel(new FlatLightLaf());
+                } catch (Exception e) {
+                    System.err.println("Error al aplicar estilo FlatLaf: " + e.getMessage());
+                }
+
+                SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
+            }
+        }
