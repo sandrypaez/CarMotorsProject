@@ -1,133 +1,140 @@
 package com.carmotors.carmotors.controller;
 
-    
 import com.carmotors.carmotors.model.dao.ClienteDAO;
 import com.carmotors.carmotors.model.entities.Cliente;
 import com.carmotors.carmotors.model.entities.OrdenServicio;
+
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Date;
 
 public class ClienteController {
     private ClienteDAO clienteDAO;
     private Timer reminderTimer;
 
-    public ClienteController() {
-        this.clienteDAO = new ClienteDAO();
+    public ClienteController(Connection conn) {
+        if (conn == null) {
+            throw new IllegalArgumentException("La conexión a la base de datos no puede ser nula");
+        }
+        this.clienteDAO = new ClienteDAO(conn);
         this.reminderTimer = new Timer();
-        scheduleReminders();
     }
 
-    public void registerClient(Cliente client) throws Exception {
-        validateClient(client);
-        clienteDAO.registerClient(client);
-        checkAndScheduleReminders(client);
+    public void registrarCliente(Cliente cliente) throws Exception {
+        validarCliente(cliente);
+        cliente.setFechaCompra(LocalDate.now());
+        clienteDAO.create(cliente);
+        checkAndScheduleReminders(cliente);
     }
 
-    public List<Cliente> listAllClients() throws SQLException {
-        return clienteDAO.listAllClients();
+    public List<Cliente> listarTodosClientes() throws SQLException {
+        return clienteDAO.readAll();
     }
 
-    public void updateClient(Cliente client) throws Exception {
-        validateClient(client);
-        clienteDAO.updateClient(client);
-        checkAndScheduleReminders(client);
+    public void actualizarCliente(Cliente cliente) throws Exception {
+        validarCliente(cliente);
+        clienteDAO.update(cliente);
+        checkAndScheduleReminders(cliente);
     }
 
-    public Cliente findClientById(int id) throws SQLException {
-        return clienteDAO.findClientById(id);
+    public Cliente buscarClientePorId(int id) throws SQLException {
+        return clienteDAO.read(id);
     }
 
-    public void applyDiscount(int clientId, double discountPercentage) throws SQLException {
-        Cliente client = findClientById(clientId);
-        if (client != null) {
-            client.setDiscountPercentage(discountPercentage);
-            clienteDAO.updateClient(client);
+    public void aplicarDescuento(int clientId, double discountPercentage) throws SQLException {
+        Cliente cliente = buscarClientePorId(clientId);
+        if (cliente != null) {
+            cliente.setDiscountPercentage(discountPercentage);
+            clienteDAO.update(cliente);
         }
     }
 
-    public void addRewardPoints(int clientId, int points) throws SQLException {
-        Cliente client = findClientById(clientId);
-        if (client != null) {
-            client.setRewardPoints(client.getRewardPoints() + points);
-            clienteDAO.updateClient(client);
+    public void agregarPuntosRecompensa(int clientId, int points) throws SQLException {
+        Cliente cliente = buscarClientePorId(clientId);
+        if (cliente != null) {
+            cliente.setRewardPoints(cliente.getRewardPoints() + points);
+            clienteDAO.update(cliente);
         }
     }
 
-    private void validateClient(Cliente client) throws Exception {
-        if (client.getName() == null || client.getName().trim().isEmpty()) {
-            throw new Exception("Client name cannot be empty");
+    private void validarCliente(Cliente cliente) throws Exception {
+        if (cliente.getNombre() == null || cliente.getNombre().trim().isEmpty()) {
+            throw new Exception("El nombre del cliente no puede estar vacío");
         }
-        if (client.getIdentification() == null || client.getIdentification().trim().isEmpty()) {
-            throw new Exception("Client identification cannot be empty");
+        if (cliente.getIdentificacion() == null || cliente.getIdentificacion().trim().isEmpty()) {
+            throw new Exception("La identificación del cliente no puede estar vacía");
+        }
+        if (cliente.getTelefono() == null || cliente.getTelefono().trim().isEmpty()) {
+            throw new Exception("El teléfono del cliente no puede estar vacío");
+        }
+        if (cliente.getCorreoElectronico() == null || cliente.getCorreoElectronico().trim().isEmpty()) {
+            throw new Exception("El correo electrónico del cliente no puede estar vacío");
+        }
+        if (!cliente.getCorreoElectronico().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            throw new Exception("El correo electrónico no tiene un formato válido");
+        }
+        if (cliente.getDireccion() == null || cliente.getDireccion().trim().isEmpty()) {
+            throw new Exception("La dirección del cliente no puede estar vacía");
         }
     }
- 
 
-
-    private void checkAndScheduleReminders(Cliente client) {
-        List<OrdenServicio> serviceHistory = client.getServiceHistory();
+    private void checkAndScheduleReminders(Cliente cliente) {
+        List<OrdenServicio> serviceHistory = cliente.getServiceHistory();
         if (serviceHistory != null && !serviceHistory.isEmpty()) {
-            OrdenServicio lastService = serviceHistory.get(serviceHistory.size() - 1);
-            Date endDate = (Date) lastService.getFechaFin();
-            if (endDate != null) {
-                Date nextReminder = new Date(endDate.getTime() + (1000L * 60 * 60 * 24 * 180)); // 6 months
-                if (nextReminder.after(new Date())) {
-                    scheduleReminder(client.getId(), "Preventive maintenance due soon for client ID: " + client.getId(), nextReminder);
+            for (OrdenServicio service : serviceHistory) {
+                java.sql.Date endDate = service.getFechaFin();
+                if (endDate != null) {
+                    LocalDate endLocalDate = endDate.toLocalDate();
+                    LocalDate nextReminderDate = endLocalDate.plusMonths(6);
+                    if (!nextReminderDate.isBefore(LocalDate.now())) {
+                        java.util.Date reminderDate = java.sql.Date.valueOf(nextReminderDate);
+                        String message = String.format("Mantenimiento preventivo próximo para cliente %s (ID: %d)", cliente.getNombre(), cliente.getId());
+                        scheduleReminder(cliente.getId(), message, reminderDate);
+                    }
                 }
-            } else {
-                System.out.println("No end date available for last service of client ID: " + client.getId());
             }
+        } else if (cliente.getFechaCompra() != null &&
+                cliente.getFechaCompra().plusDays(2).isEqual(LocalDate.now())) {
+            enviarCorreo(cliente);
+        } else {
+            System.out.println("No hay historial de servicios ni fecha de compra válida para el cliente ID: " + cliente.getId());
         }
     }
-   public void aplicarBeneficios(Cliente cliente) {
-    int servicios = cliente.getServiceHistory().size();
-    int puntos = cliente.getRewardPoints();
 
-    if (servicios >= 10) {
-        cliente.setDiscountPercentage(15);
-        cliente.setRewardPoints(puntos + 100);
-    } else if (servicios >= 5) {
-        cliente.setDiscountPercentage(5);
-        cliente.setRewardPoints(puntos + 50);
-    } else {
-        cliente.setDiscountPercentage(0);
+    public void aplicarBeneficios(Cliente cliente) throws SQLException {
+        int servicios = cliente.getServiceHistory() != null ? cliente.getServiceHistory().size() : 0;
+        int puntos = cliente.getRewardPoints();
+
+        if (servicios >= 10) {
+            cliente.setDiscountPercentage(15);
+            cliente.setRewardPoints(puntos + 100);
+        } else if (servicios >= 5) {
+            cliente.setDiscountPercentage(5);
+            cliente.setRewardPoints(puntos + 50);
+        } else {
+            cliente.setDiscountPercentage(0);
+        }
+
+        clienteDAO.update(cliente);
     }
 
-    try {
-        clienteDAO.updateClient(cliente);
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
-
-
-    private void scheduleReminder(int clientId, String message, Date scheduleDate) {
+    private void scheduleReminder(int clientId, String message, java.util.Date scheduleDate) {
         reminderTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println(message + " on " + new Date());
-                
+                System.out.println(message + " en " + new java.util.Date());
             }
         }, scheduleDate);
     }
 
-    private void scheduleReminders() {
-        try {
-            List<Cliente> clients = listAllClients();
-            for (Cliente client : clients) {
-                checkAndScheduleReminders(client);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+
+    private void enviarCorreo(Cliente cliente) {
+        // Implementa la lógica real de envío de correo aquí
+        System.out.println("Enviando correo a " + cliente.getCorreoElectronico() + " para cliente ID: " + cliente.getId());
     }
-
-    
 }
-
-
-

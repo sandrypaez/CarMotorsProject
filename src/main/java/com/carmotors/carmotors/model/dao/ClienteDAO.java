@@ -1,127 +1,125 @@
 package com.carmotors.carmotors.model.dao;
 
 import com.carmotors.carmotors.model.entities.Cliente;
-import java.sql.*;
-import java.util.*;
-    
-import com.carmotors.carmotors.model.entities.Cliente;
 import com.carmotors.carmotors.model.entities.OrdenServicio;
-import com.carmotors.carmotors.model.dao.ConexionDB;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClienteDAO {
+    private Connection conn;
 
-    public void registerClient(Cliente client) throws SQLException {
-        if (client == null) {
-            throw new SQLException("Client cannot be null");
+    public ClienteDAO(Connection conn) {
+        this.conn = conn;
+    }
+
+    public void create(Cliente cliente) throws SQLException {
+        if (cliente == null) {
+            throw new SQLException("El cliente no puede ser nulo");
         }
-        String sql = "INSERT INTO Clientes (nombre, identificacion, telefono, correo_electronico) VALUES (?, ?, ?, ?)";
-
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-            pstmt.setString(1, client.getName());
-            pstmt.setString(2, client.getIdentification());
-            pstmt.setString(3, client.getPhone());
-            pstmt.setString(4, client.getEmail());
-
+        String sql = "INSERT INTO Clientes (nombre, identificacion, telefono, correo_electronico, direccion, discount_percentage, reward_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, cliente.getNombre());
+            pstmt.setString(2, cliente.getIdentificacion());
+            pstmt.setString(3, cliente.getTelefono());
+            pstmt.setString(4, cliente.getCorreoElectronico());
+            pstmt.setString(5, cliente.getDireccion());
+            pstmt.setObject(6, cliente.getFechaCompra() != null ? Date.valueOf(cliente.getFechaCompra()) : null);
+            pstmt.setDouble(7, cliente.getDiscountPercentage());
+            pstmt.setInt(8, cliente.getRewardPoints());
             pstmt.executeUpdate();
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    client.setId(rs.getInt(1));
+                    cliente.setId(rs.getInt(1));
                 }
             }
         }
     }
 
-    public List<Cliente> listAllClients() throws SQLException {
-        List<Cliente> clients = new ArrayList<>();
+    public List<Cliente> readAll() throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
         String sql = "SELECT * FROM Clientes ORDER BY nombre";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql);
+        try (PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                Cliente client = new Cliente();
-                client.setId(rs.getInt("id_cliente"));
-                client.setName(rs.getString("nombre"));
-                client.setIdentification(rs.getString("identificacion"));
-                client.setPhone(rs.getString("telefono"));
-                client.setEmail(rs.getString("correo_electronico"));
-                client.setDiscountPercentage(rs.getDouble("discount_percentage"));
-                client.setRewardPoints(rs.getInt("reward_points"));
-                client.setServiceHistory(getServiceHistory(client.getId()));
-                clients.add(client);
+                Cliente cliente = new Cliente();
+                cliente.setId(rs.getInt("id_cliente"));
+                cliente.setNombre(rs.getString("nombre"));
+                cliente.setIdentificacion(rs.getString("identificacion"));
+                cliente.setTelefono(rs.getString("telefono"));
+                cliente.setCorreoElectronico(rs.getString("correo_electronico"));
+                cliente.setDireccion(rs.getString("direccion"));
+                cliente.setDiscountPercentage(rs.getDouble("discount_percentage"));
+                cliente.setRewardPoints(rs.getInt("reward_points"));
+                cliente.setServiceHistory(getOrdenesServicioPorCliente(cliente.getId()));
+                clientes.add(cliente);
             }
         }
-        return clients;
+        return clientes;
     }
-    public void updateClient(Cliente client) throws SQLException {
-        if (client == null) {
-            throw new SQLException("Client cannot be null");
+
+    public void update(Cliente cliente) throws SQLException {
+        if (cliente == null) {
+            throw new SQLException("El cliente no puede ser nulo");
         }
-        String sql = "UPDATE Clientes SET nombre = ?, identificacion = ?, telefono = ?, correo_electronico = ?, discount_percentage = ?, reward_points = ? WHERE id_cliente = ?";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, client.getName());
-            pstmt.setString(2, client.getIdentification());
-            pstmt.setString(3, client.getPhone());
-            pstmt.setString(4, client.getEmail());
-            pstmt.setDouble(5, client.getDiscountPercentage());
-            pstmt.setInt(6, client.getRewardPoints());
-            pstmt.setInt(7, client.getId());
+        String sql = "UPDATE Clientes SET nombre = ?, identificacion = ?, telefono = ?, correo_electronico = ?, direccion = ?, discount_percentage = ?, reward_points = ? WHERE id_cliente = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, cliente.getNombre());
+            pstmt.setString(2, cliente.getIdentificacion());
+            pstmt.setString(3, cliente.getTelefono());
+            pstmt.setString(4, cliente.getCorreoElectronico());
+            pstmt.setString(5, cliente.getDireccion());
+            pstmt.setObject(6, cliente.getFechaCompra() != null ? Date.valueOf(cliente.getFechaCompra()) : null);
+            pstmt.setDouble(7, cliente.getDiscountPercentage());
+            pstmt.setInt(8, cliente.getRewardPoints());
+            pstmt.setInt(9, cliente.getId());
             pstmt.executeUpdate();
         }
     }
 
-    public Cliente findClientById(int id) throws SQLException {
+    public Cliente read(int id) throws SQLException {
         String sql = "SELECT * FROM Clientes WHERE id_cliente = ?";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    Cliente client = new Cliente();
-                    client.setId(rs.getInt("id_cliente"));
-                    client.setName(rs.getString("nombre"));
-                    client.setIdentification(rs.getString("identificacion"));
-                    client.setPhone(rs.getString("telefono"));
-                    client.setEmail(rs.getString("correo_electronico"));
-                    client.setDiscountPercentage(rs.getDouble("discount_percentage"));
-                    client.setRewardPoints(rs.getInt("reward_points"));
-                    client.setServiceHistory(getServiceHistory(id));
-                    return client;
+                    Cliente cliente = new Cliente();
+                    cliente.setId(rs.getInt("id_cliente"));
+                    cliente.setNombre(rs.getString("nombre"));
+                    cliente.setIdentificacion(rs.getString("identificacion"));
+                    cliente.setTelefono(rs.getString("telefono"));
+                    cliente.setCorreoElectronico(rs.getString("correo_electronico"));
+                    cliente.setDireccion(rs.getString("direccion"));
+                    cliente.setDiscountPercentage(rs.getDouble("discount_percentage"));
+                    cliente.setRewardPoints(rs.getInt("reward_points"));
+                    cliente.setServiceHistory(getOrdenesServicioPorCliente(id));
+                    return cliente;
                 }
             }
         }
         return null;
     }
 
-    private List<OrdenServicio> getServiceHistory(int clientId) throws SQLException {
+    public List<OrdenServicio> getOrdenesServicioPorCliente(int clientId) throws SQLException {
         List<OrdenServicio> history = new ArrayList<>();
-        String sql = "SELECT os.*, s.tipo, s.descripcion, s.costo_mano_obra " +
-                     "FROM OrdenesServicio os " +
-                     "JOIN Vehiculos v ON os.id_vehiculo = v.id_vehiculo " +
-                     "JOIN Servicios s ON os.id_servicio = s.id_servicio " +
-                     "WHERE v.id_cliente = ?";
-        try (Connection conn = ConexionDB.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String sql = "SELECT os.* " +
+                "FROM OrdenesServicio os " +
+                "JOIN Vehiculos v ON os.id_vehiculo = v.id_vehiculo " +
+                "WHERE v.id_cliente = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, clientId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     OrdenServicio service = new OrdenServicio();
                     service.setId(rs.getInt("id_orden"));
-                    service.setVehicleId(rs.getInt("id_vehiculo"));
-                    service.setClientId(clientId);
-                    service.setMaintenanceType(rs.getString("tipo"));
-                    service.setDescription(rs.getString("descripcion"));
-                    service.setLaborCost(rs.getDouble("costo_mano_obra"));
-                    service.setStatus(rs.getString("estado"));
-                    service.setStartDate(rs.getDate("fecha_inicio"));
-                    service.setEndDate(rs.getDate("fecha_fin"));
+                    service.setIdVehiculo(rs.getInt("id_vehiculo"));
+                    service.setIdServicio(rs.getInt("id_servicio"));
+                    service.setEstado(rs.getString("estado"));
+                    service.setFechaInicio(rs.getDate("fecha_inicio"));
+                    service.setFechaFin(rs.getDate("fecha_fin"));
+                    service.setRecordatorioFecha(rs.getDate("recordatorio_fecha"));
+                    service.setRecordatorioEnviado(rs.getBoolean("recordatorio_enviado"));
                     history.add(service);
                 }
             }
@@ -129,4 +127,3 @@ public class ClienteDAO {
         return history;
     }
 }
-

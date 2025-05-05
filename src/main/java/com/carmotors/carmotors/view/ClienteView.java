@@ -1,20 +1,30 @@
 package com.carmotors.carmotors.view;
 
 import com.carmotors.carmotors.controller.ClienteController;
+import com.carmotors.carmotors.model.dao.ConexionDB;
 import com.carmotors.carmotors.model.entities.Cliente;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 import java.util.List;
 
 public class ClienteView extends JFrame {
-    private final ClienteController controller = new ClienteController();
+    private ClienteController controller;
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
 
     public ClienteView() {
-        setTitle("CarMotors  - Gestión de Clientes");
+        try {
+            Connection conn = ConexionDB.getConnection();
+            this.controller = new ClienteController(conn);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "❌ Error al conectar con la base de datos: " + e.getMessage());
+            System.exit(1);
+        }
+
+        setTitle("CarMotors - Gestión de Clientes");
         setSize(800, 550);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -63,9 +73,9 @@ public class ClienteView extends JFrame {
         JTextField txtId = new JTextField();
         JTextField txtTel = new JTextField();
         JTextField txtEmail = new JTextField();
-        JTextField txtPuntos = new JTextField();
+        JTextField txtPuntos = new JTextField("0");
         txtPuntos.setEditable(false);
-        JTextField txtDescuento = new JTextField();
+        JTextField txtDescuento = new JTextField("0.0");
         txtDescuento.setEditable(false);
         JButton btnGuardar = new JButton("✅ Guardar");
 
@@ -80,20 +90,18 @@ public class ClienteView extends JFrame {
         btnGuardar.addActionListener(e -> {
             try {
                 Cliente cliente = new Cliente();
-                cliente.setName(txtNombre.getText());
-                cliente.setIdentification(txtId.getText());
-                cliente.setPhone(txtTel.getText());
-                cliente.setEmail(txtEmail.getText());
+                cliente.setNombre(txtNombre.getText());
+                cliente.setIdentificacion(txtId.getText());
+                cliente.setTelefono(txtTel.getText());
+                cliente.setCorreoElectronico(txtEmail.getText());
                 cliente.setDiscountPercentage(0.0);
                 cliente.setRewardPoints(0);
 
-                controller.registerClient(cliente);
+                controller.registrarCliente(cliente);
 
-                txtPuntos.setText("0");
-                txtDescuento.setText("0.0");
-
-                JOptionPane.showMessageDialog(this, "✅ Cliente registrado con ID: " + cliente.getId());
+                JOptionPane.showMessageDialog(this, "✅ Cliente registrado con éxito.");
                 txtNombre.setText(""); txtId.setText(""); txtTel.setText(""); txtEmail.setText("");
+                txtPuntos.setText("0"); txtDescuento.setText("0.0");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "❌ Error: " + ex.getMessage());
             }
@@ -114,13 +122,13 @@ public class ClienteView extends JFrame {
 
     private void cargarClientes() {
         try {
-            List<Cliente> lista = controller.listAllClients();
+            List<Cliente> lista = controller.listarTodosClientes();
             areaListado.setText("");
             for (Cliente c : lista) {
                 areaListado.append("ID: " + c.getId() +
-                        ", Nombre: " + c.getName() +
-                        ", Tel: " + c.getPhone() +
-                        ", Email: " + c.getEmail() +
+                        ", Nombre: " + c.getNombre() +
+                        ", Tel: " + c.getTelefono() +
+                        ", Email: " + c.getCorreoElectronico() +
                         ", Puntos: " + c.getRewardPoints() +
                         ", Descuento: " + c.getDiscountPercentage() + "%\n");
             }
@@ -146,13 +154,13 @@ public class ClienteView extends JFrame {
         btnBuscar.addActionListener(e -> {
             try {
                 int id = Integer.parseInt(txtBuscar.getText());
-                Cliente c = controller.findClientById(id);
+                Cliente c = controller.buscarClientePorId(id);
                 if (c != null) {
                     controller.aplicarBeneficios(c);
                     resultado.setText("ID: " + c.getId() +
-                            "\nNombre: " + c.getName() +
-                            "\nTeléfono: " + c.getPhone() +
-                            "\nEmail: " + c.getEmail() +
+                            "\nNombre: " + c.getNombre() +
+                            "\nTeléfono: " + c.getTelefono() +
+                            "\nEmail: " + c.getCorreoElectronico() +
                             "\nPuntos: " + c.getRewardPoints() +
                             "\nDescuento: " + c.getDiscountPercentage() + "%");
                 } else {
@@ -198,17 +206,17 @@ public class ClienteView extends JFrame {
         btnCargar.addActionListener(e -> {
             try {
                 int id = Integer.parseInt(txtId.getText());
-                Cliente c = controller.findClientById(id);
+                Cliente c = controller.buscarClientePorId(id);
                 if (c != null) {
                     controller.aplicarBeneficios(c);
-                    txtNombre.setText(c.getName());
-                    txtIdent.setText(c.getIdentification());
-                    txtTel.setText(c.getPhone());
-                    txtEmail.setText(c.getEmail());
+                    txtNombre.setText(c.getNombre());
+                    txtIdent.setText(c.getIdentificacion());
+                    txtTel.setText(c.getTelefono());
+                    txtEmail.setText(c.getCorreoElectronico());
                     txtPuntos.setText(String.valueOf(c.getRewardPoints()));
                     txtDescuento.setText(c.getDiscountPercentage() + "%");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Cliente no encontrado.");
+                    JOptionPane.showMessageDialog(this,"Cliente no encontrado.");
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "❌ Error: " + ex.getMessage());
@@ -218,13 +226,13 @@ public class ClienteView extends JFrame {
         btnActualizar.addActionListener(e -> {
             try {
                 int id = Integer.parseInt(txtId.getText());
-                Cliente c = controller.findClientById(id);
+                Cliente c = controller.buscarClientePorId(id);
                 if (c != null) {
-                    c.setName(txtNombre.getText());
-                    c.setIdentification(txtIdent.getText());
-                    c.setPhone(txtTel.getText());
-                    c.setEmail(txtEmail.getText());
-                    controller.updateClient(c);
+                    c.setNombre(txtNombre.getText());
+                    c.setIdentificacion(txtIdent.getText());
+                    c.setTelefono(txtTel.getText());
+                    c.setCorreoElectronico(txtEmail.getText());
+                    controller.actualizarCliente(c);
                     JOptionPane.showMessageDialog(this, "✅ Cliente actualizado.");
                 }
             } catch (Exception ex) {

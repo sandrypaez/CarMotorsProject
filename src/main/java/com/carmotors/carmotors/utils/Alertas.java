@@ -33,7 +33,7 @@ public class Alertas {
 
     private void enviarCorreo(Cliente cliente) {
         String asunto = "¡Gracias por tu compra!";
-        String cuerpo = "Hola " + cliente.getName() + ",\n\n" +
+        String cuerpo = "Hola " + cliente.getNombre() + ",\n\n" +
                 "Han pasado 2 días desde tu compra y queremos agradecerte.\n\n" +
                 "¡Tienes " + cliente.getRewardPoints() + " puntos acumulados en tu cuenta!\n" +
                 "Aprovecha nuestras nuevas promociones exclusivas para ti.\n\n" +
@@ -54,14 +54,14 @@ public class Alertas {
         try {
             Message mensaje = new MimeMessage(sesion);
             mensaje.setFrom(new InternetAddress(correoOrigen));
-            mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse(cliente.getEmail()));
+            mensaje.setRecipients(Message.RecipientType.TO, InternetAddress.parse(cliente.getCorreoElectronico()));
             mensaje.setSubject(asunto);
             mensaje.setText(cuerpo);
 
             Transport.send(mensaje);
-            System.out.println("✅ Correo enviado a: " + cliente.getEmail());
+            System.out.println("✅ Correo enviado a: " + cliente.getCorreoElectronico());
         } catch (MessagingException e) {
-            System.err.println("❌ Error al enviar correo a " + cliente.getEmail() + ": " + e.getMessage());
+            System.err.println("❌ Error al enviar correo a " + cliente.getCorreoElectronico() + ": " + e.getMessage());
         }
     }
 }

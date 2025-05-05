@@ -3,24 +3,27 @@ package com.carmotors.carmotors.model.entities;
 import java.sql.Date;
 
 public class OrdenServicio {
-
     private int id;
     private int idVehiculo;
     private int idServicio;
     private String estado;
     private Date fechaInicio;
     private Date fechaFin;
-  private int vehicleId;
+    private Date recordatorioFecha;
+    private boolean recordatorioEnviado;
+
     public OrdenServicio() {
     }
 
-    public OrdenServicio(int id, int idVehiculo, int idServicio, String estado, Date fechaInicio, Date fechaFin) {
+    public OrdenServicio(int id, int idVehiculo, int idServicio, String estado, Date fechaInicio, Date fechaFin, Date recordatorioFecha, boolean recordatorioEnviado) {
         this.id = id;
         this.idVehiculo = idVehiculo;
         this.idServicio = idServicio;
         this.estado = estado;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
+        this.recordatorioFecha = recordatorioFecha;
+        this.recordatorioEnviado = recordatorioEnviado;
     }
 
     // Getters y Setters
@@ -72,43 +75,19 @@ public class OrdenServicio {
         this.fechaFin = fechaFin;
     }
 
-    // Métodos que aún no están implementados
- 
-
-public void setVehicleId(int id) {
-    this.vehicleId = id;
-}
-
-public int getVehicleId() {
-    return vehicleId;
-}
-
-
-    public void setClientId(int clientId) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    public Date getRecordatorioFecha() {
+        return recordatorioFecha;
     }
 
-    public void setMaintenanceType(String string) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    public void setRecordatorioFecha(Date recordatorioFecha) {
+        this.recordatorioFecha = recordatorioFecha;
     }
 
-    public void setDescription(String string) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+    public boolean isRecordatorioEnviado() {
+        return recordatorioEnviado;
     }
 
-    public void setLaborCost(double aDouble) {
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
-
-    public void setStatus(String string) {
-        this.estado = string;
-    }
-
-    public void setStartDate(Date date) {
-        this.fechaInicio = date;
-    }
-
-    public void setEndDate(Date date) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void setRecordatorioEnviado(boolean recordatorioEnviado) {
+        this.recordatorioEnviado = recordatorioEnviado;
     }
 }
