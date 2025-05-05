@@ -14,36 +14,76 @@ public class MenuPrincipal extends JFrame {
         }
 
         setTitle("CarMotors - Menú Principal");
-        setSize(500, 500);
+        setSize(750, 600);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.WHITE);
-        panel.setLayout(new GridLayout(6, 1, 15, 15));
-        panel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+        // Encabezado superior
+        JPanel header = new JPanel(new BorderLayout());
+        header.setBackground(new Color(25, 118, 210));
+        header.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JLabel titulo = new JLabel("🚗 CarMotors - Sistema de Gestión");
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        titulo.setForeground(Color.WHITE);
+        titulo.setHorizontalAlignment(JLabel.CENTER);
+        header.add(titulo, BorderLayout.CENTER);
+        add(header, BorderLayout.NORTH);
 
-        JButton btnInventario = new JButton("📦 Gestión de Inventarios");
-        JButton btnMantenimiento = new JButton("🔧 Mantenimiento y Reparaciones");
-        JButton btnClientesFact = new JButton("👤 Clientes y Facturación");
-        JButton btnProveedores = new JButton("🏬 Proveedores y Compras");
-        JButton btnReportes = new JButton("📊 Reportes y Estadísticas");
+        // Panel central con botones
+        JPanel panelBotones = new JPanel();
+        panelBotones.setBackground(new Color(250, 250, 250));
+        panelBotones.setLayout(new GridLayout(5, 1, 20, 20));
+        panelBotones.setBorder(BorderFactory.createEmptyBorder(40, 120, 40, 120));
 
-        JButton[] botones = {btnInventario, btnMantenimiento, btnClientesFact, btnProveedores, btnReportes};
-        for (JButton btn : botones) {
-            btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
-            btn.setFocusPainted(false);
-            btn.setBackground(new Color(240, 240, 240));
-            panel.add(btn);
-        }
+        JButton btnInventario = crearBoton("📦 Gestión de Inventarios");
+        JButton btnMantenimiento = crearBoton("🔧 Mantenimiento y Reparaciones");
+        JButton btnClientesFact = crearBoton("👤 Clientes y Facturación");
+        JButton btnProveedores = crearBoton("🏬 Proveedores y Compras");
+        JButton btnReportes = crearBoton("📊 Reportes y Estadísticas");
 
+        panelBotones.add(btnInventario);
+        panelBotones.add(btnMantenimiento);
+        panelBotones.add(btnClientesFact);
+        panelBotones.add(btnProveedores);
+        panelBotones.add(btnReportes);
+
+        add(panelBotones, BorderLayout.CENTER);
+
+        // Footer con sombra
+        JPanel footer = new JPanel(new BorderLayout());
+        footer.setBackground(new Color(245, 245, 245));
+        footer.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, new Color(200, 200, 200)));
+
+        JLabel textoFooter = new JLabel("📱 Optimizado para móviles - CarMotors © 2025", JLabel.CENTER);
+        textoFooter.setFont(new Font("Segoe UI", Font.ITALIC, 12));
+        textoFooter.setForeground(Color.DARK_GRAY);
+        textoFooter.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        footer.add(textoFooter, BorderLayout.CENTER);
+        add(footer, BorderLayout.SOUTH);
+
+        // Acciones
         btnInventario.addActionListener(e -> new FacturaView().setVisible(true));
         btnMantenimiento.addActionListener(e -> new FacturaView().setVisible(true));
         btnClientesFact.addActionListener(e -> new MainMenu().setVisible(true));
         btnProveedores.addActionListener(e -> new FacturaView().setVisible(true));
         btnReportes.addActionListener(e -> new FacturaView().setVisible(true));
+    }
 
-        add(panel);
+    private JButton crearBoton(String texto) {
+        JButton boton = new JButton(texto);
+        boton.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        boton.setFocusPainted(false);
+        boton.setBackground(new Color(227, 242, 253));
+        boton.setForeground(new Color(21, 101, 192));
+        boton.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(100, 181, 246), 2),
+                BorderFactory.createEmptyBorder(12, 24, 12, 24)
+        ));
+        boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        boton.setOpaque(true);
+        boton.setPreferredSize(new Dimension(250, 45));
+        return boton;
     }
 
     public static void main(String[] args) {
