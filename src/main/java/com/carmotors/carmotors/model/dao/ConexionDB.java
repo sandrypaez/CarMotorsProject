@@ -7,8 +7,8 @@ import java.sql.SQLException;
 public class ConexionDB {
 
     private static final String DB_NAME = "carmotors";
-    private static final String USER = "carmotors_user";
-    private static final String PASSWORD = "12345678";
+    private static final String USER = "root";
+    private static final String PASSWORD = "Ytzhak*#2007!";
     private static final String URL = "jdbc:mysql://localhost:3306/" + DB_NAME +
             "?useSSL=false&serverTimezone=America/Bogota&allowPublicKeyRetrieval=true";
 
