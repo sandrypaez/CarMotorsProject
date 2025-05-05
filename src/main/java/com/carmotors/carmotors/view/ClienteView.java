@@ -14,7 +14,7 @@ public class ClienteView extends JFrame {
     private final JPanel cardPanel = new JPanel(cardLayout);
 
     public ClienteView() {
-        setTitle("CarMotors - Gestión de Clientes");
+        setTitle("CarMotors  - Gestión de Clientes");
         setSize(800, 550);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
