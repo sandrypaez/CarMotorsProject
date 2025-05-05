@@ -5,9 +5,9 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainMenu extends JFrame {
+public class MenuComprasProvedor extends JFrame {
 
-    public MainMenu() {
+    public MenuComprasProvedor() {
         setTitle("CarMotors - Menú Principal");
         setSize(420, 300);
         setLocationRelativeTo(null);
@@ -27,8 +27,8 @@ public class MainMenu extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         panel.setBackground(Color.decode("#E3F2FD"));
 
-        JButton btnCliente = new JButton("👤  Registrar Cliente");
-        JButton btnFactura = new JButton("🧾  Generar Factura");
+        JButton btnCliente = new JButton("👤  Compras");
+        JButton btnFactura = new JButton("🧾  Proveedor");
 
         estilizarBoton(btnCliente);
         estilizarBoton(btnFactura);
@@ -38,8 +38,8 @@ public class MainMenu extends JFrame {
         add(panel, BorderLayout.CENTER);
 
         // Acciones
-        btnCliente.addActionListener(e -> new ClienteView().setVisible(true));
-        btnFactura.addActionListener(e -> new FacturaView().setVisible(true));
+        btnCliente.addActionListener(e -> new ComprasView().setVisible(true));
+        btnFactura.addActionListener(e -> new ProveedorView().setVisible(true));
     }
 
     private void estilizarBoton(JButton boton) {
@@ -71,6 +71,6 @@ public class MainMenu extends JFrame {
             System.err.println("Error al aplicar estilo FlatLaf: " + e.getMessage());
         }
 
-        SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MenuComprasProvedor().setVisible(true));
     }
 }
