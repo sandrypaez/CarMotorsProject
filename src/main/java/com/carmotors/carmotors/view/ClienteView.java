@@ -208,7 +208,7 @@ public class ClienteView extends JFrame {
                     txtPuntos.setText(String.valueOf(c.getRewardPoints()));
                     txtDescuento.setText(c.getDiscountPercentage() + "%");
                 } else {
-                    JOptionPane.showMessageDialog(this, "Cliente no encontrado.");
+                    JOptionPane.showMessageDialog(this,"Cliente no encontrado.");
                 }
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "❌ Error: " + ex.getMessage());
