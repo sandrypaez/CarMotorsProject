@@ -1,42 +1,25 @@
 package com.carmotors.carmotors.model.dao;
 
-import com.carmotors.carmotors.utils.ConfigManager;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConexionDB {
-    private static Connection connection = null;
 
-    public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                String dbName = ConfigManager.get("app.db");
-                String user = ConfigManager.get("app.user");
-                String pass = ConfigManager.get("app.password");
-                String url = "jdbc:mysql://localhost:3306/" + dbName;
+    private static final String DB_NAME = "carmotors";
+    private static final String USER = "carmotors_user";
+    private static final String PASSWORD = "12345678";
+    private static final String URL = "jdbc:mysql://localhost:3306/" + DB_NAME +
+            "?useSSL=false&serverTimezone=America/Bogota&allowPublicKeyRetrieval=true";
 
-                connection = DriverManager.getConnection(url, user, pass);
-                System.out.println("✅ Conexión a base de datos establecida con éxito.");
-
-            } catch (SQLException e) {
-                System.err.println("❌ Error al conectar a la base de datos:");
-                e.printStackTrace();
-            }
-        }
-        return connection;
-    }
-
-    public static void closeConnection() {
+    public static Connection getConnection() throws SQLException {
         try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-                System.out.println("🔒 Conexión cerrada correctamente.");
-            }
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("✅ Conexión a la base de datos establecida.");
+            return connection;
         } catch (SQLException e) {
-            System.err.println("❌ Error al cerrar la conexión:");
-            e.printStackTrace();
+            System.err.println("❌ Error al conectar a la base de datos: " + e.getMessage());
+            throw e; // Lanza la excepción para que el código que llama la maneje
         }
     }
 }

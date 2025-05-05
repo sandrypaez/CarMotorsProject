@@ -1,25 +1,48 @@
 package com.carmotors.carmotors.model.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cliente {
     private int id;
-    private String nombre;
-    private String identificacion;
-    private String telefono;
-    private String correoElectronico;
+    private String name;
+    private String identification;
+    private String phone;
+    private String email;
+    private double discountPercentage;
+    private int rewardPoints;
+    private List<OrdenServicio> serviceHistory;
 
-    public Cliente() {}
-
-    public Cliente(int id, String nombre, String identificacion, String telefono, String correoElectronico) {
-        this.id = id;
-        this.nombre = nombre;
-        this.identificacion = identificacion;
-        this.telefono = telefono;
-        this.correoElectronico = correoElectronico;
+    // Constructor vacío
+    public Cliente() {
+        this.serviceHistory = new ArrayList<>();
     }
 
-    // Getters and Setters
-    // ...
+    // Constructor completo
+    public Cliente(int id, String name, String identification, String phone, String email, double discountPercentage, int rewardPoints) {
+        this.id = id;
+        this.name = name;
+        this.identification = identification;
+        this.phone = phone;
+        this.email = email;
+        this.discountPercentage = discountPercentage;
+        this.rewardPoints = rewardPoints;
+        this.serviceHistory = new ArrayList<>();
+    }
 
+    // Constructor para compatibilidad con FacturaDAO
+    public Cliente(int id, String name, String identification, String phone, String email, String address) {
+        this.id = id;
+        this.name = name;
+        this.identification = identification;
+        this.phone = phone;
+        this.email = email;
+        this.discountPercentage = 0.0;
+        this.rewardPoints = 0;
+        this.serviceHistory = new ArrayList<>();
+    }
+
+    // Getters y setters
     public int getId() {
         return id;
     }
@@ -28,35 +51,59 @@ public class Cliente {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getIdentificacion() {
-        return identificacion;
+    public String getIdentification() {
+        return identification;
     }
 
-    public void setIdentificacion(String identificacion) {
-        this.identificacion = identificacion;
+    public void setIdentification(String identification) {
+        this.identification = identification;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getCorreoElectronico() {
-        return correoElectronico;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCorreoElectronico(String correoElectronico) {
-        this.correoElectronico = correoElectronico;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public int getRewardPoints() {
+        return rewardPoints;
+    }
+
+    public void setRewardPoints(int rewardPoints) {
+        this.rewardPoints = rewardPoints;
+    }
+
+    public List<OrdenServicio> getServiceHistory() {
+        return serviceHistory;
+    }
+
+    public void setServiceHistory(List<OrdenServicio> serviceHistory) {
+        this.serviceHistory = serviceHistory;
     }
 }
