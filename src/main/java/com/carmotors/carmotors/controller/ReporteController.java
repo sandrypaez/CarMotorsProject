@@ -26,7 +26,7 @@ public class ReporteController {
     }
 
     public void generarReporteInventarioRepuestos() throws SQLException {
-        String sql = "SELECT tipo, marca, estado, cantidad, fecha_caducidad " +
+        String sql = "SELECT tipo, marca, estado, cantidad_stock, fecha_caducidad " +
                 "FROM Repuestos";
         StringBuilder datos = new StringBuilder("Listado detallado de repuestos:\n");
         try (PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -34,7 +34,7 @@ public class ReporteController {
             while (rs.next()) {
                 datos.append(String.format("Tipo: %s, Marca: %s, Estado: %s, Cantidad: %d, Fecha Caducidad: %s\n",
                         rs.getString("tipo"), rs.getString("marca"), rs.getString("estado"),
-                        rs.getInt("cantidad"), rs.getDate("fecha_caducidad")));
+                        rs.getInt("cantidad_stock"), rs.getDate("fecha_caducidad")));
             }
         }
         Reporte reporte = new Reporte();
@@ -49,7 +49,8 @@ public class ReporteController {
         String sql = "SELECT r.tipo, r.marca, COUNT(*) as cantidad_usada, s.descripcion " +
                 "FROM Repuestos r " +
                 "JOIN Servicios_Repuestos sr ON r.id_repuesto = sr.id_repuesto " +
-                "JOIN Servicios s ON sr.id_servicio = s.id_servicio " +
+                "JOIN OrdenesServicio os ON sr.id_orden = os.id_orden " +
+                "JOIN Servicios s ON os.id_servicio = s.id_servicio " +
                 "GROUP BY r.tipo, r.marca, s.descripcion";
         StringBuilder datos = new StringBuilder("Análisis de consumo de repuestos:\n");
         try (PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -69,15 +70,15 @@ public class ReporteController {
     }
 
     public void generarReporteAlertasRepuestos() throws SQLException {
-        String sql = "SELECT tipo, marca, cantidad, fecha_caducidad " +
+        String sql = "SELECT tipo, marca, cantidad_stock, fecha_caducidad " +
                 "FROM Repuestos " +
-                "WHERE fecha_caducidad <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) OR cantidad < 5";
+                "WHERE fecha_caducidad <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) OR cantidad_stock < 5";
         StringBuilder datos = new StringBuilder("Alertas de repuestos:\n");
         try (PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 datos.append(String.format("Tipo: %s, Marca: %s, Cantidad: %d, Fecha Caducidad: %s\n",
-                        rs.getString("tipo"), rs.getString("marca"), rs.getInt("cantidad"),
+                        rs.getString("tipo"), rs.getString("marca"), rs.getInt("cantidad_stock"),
                         rs.getDate("fecha_caducidad")));
             }
         }
@@ -164,7 +165,7 @@ public class ReporteController {
                 "JOIN Clientes c ON v.id_cliente = c.id_cliente " +
                 "JOIN Servicios s ON os.id_servicio = s.id_servicio " +
                 "LEFT JOIN Facturas f ON os.id_orden = f.id_orden " +
-                "LEFT JOIN Servicios_Repuestos sr ON s.id_servicio = sr.id_servicio " +
+                "LEFT JOIN Servicios_Repuestos sr ON os.id_orden = sr.id_orden " +
                 "LEFT JOIN Repuestos r ON sr.id_repuesto = r.id_repuesto";
         StringBuilder datos = new StringBuilder("Historial de servicios por cliente:\n");
         try (PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -184,7 +185,7 @@ public class ReporteController {
     }
 
     public void generarReporteClientesFrecuentes() throws SQLException {
-        String sql = "SELECT c.nombre, COUNT(os.id_orden) as num_servicios, SUM(f.total) as total_facturado " +
+        String sql = "SELECT c.nombre, COUNT(os.id_orden) as num_servicios, COALESCE(SUM(f.total), 0) as total_facturado " +
                 "FROM Clientes c " +
                 "LEFT JOIN Vehiculos v ON c.id_cliente = v.id_cliente " +
                 "LEFT JOIN OrdenesServicio os ON v.id_vehiculo = os.id_vehiculo " +
@@ -253,7 +254,7 @@ public class ReporteController {
     }
 
     public void generarReporteEvaluacionCampanas() throws SQLException {
-        String sql = "SELECT c.nombre, COUNT(os.id_orden) as participaciones, SUM(f.total) as impacto_economico, s.descripcion " +
+        String sql = "SELECT c.nombre, COUNT(os.id_orden) as participaciones, COALESCE(SUM(f.total), 0) as impacto_economico, s.descripcion " +
                 "FROM Campanas c " +
                 "JOIN OrdenesServicio os ON c.id_campana = os.id_campana " +
                 "JOIN Facturas f ON os.id_orden = f.id_orden " +
