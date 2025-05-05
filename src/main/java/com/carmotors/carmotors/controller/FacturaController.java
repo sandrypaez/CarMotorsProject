@@ -9,6 +9,16 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfWriter;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.Multipart;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeBodyPart;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMultipart;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +27,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 
 public class FacturaController {
     private final FacturaDAO facturaDAO = new FacturaDAO();
@@ -64,6 +75,51 @@ public class FacturaController {
         // Guardar en la base de datos
         facturaDAO.guardarFactura(factura);
     }
+
+public void enviarFacturaPorCorreo(String destinatario, File archivoAdjunto) {
+    String remitente = "parracamila870@gmail.com";
+    String password = "x c t t q p v u n r p u h s y j"; 
+
+    Properties props = new Properties();
+    props.put("mail.smtp.auth", "true");
+    props.put("mail.smtp.starttls.enable", "true");
+    props.put("mail.smtp.host", "smtp.gmail.com");
+    props.put("mail.smtp.port", "587");
+
+    Session session = Session.getInstance(props, new Authenticator() {
+        protected PasswordAuthentication getPasswordAuthentication() {
+            return new PasswordAuthentication(remitente, password);
+        }
+    });
+
+    try {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(remitente));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(destinatario));
+        message.setSubject("Factura de su servicio - Motores & Ruedas");
+
+        // Cuerpo del mensaje
+        MimeBodyPart texto = new MimeBodyPart();
+        texto.setText("Adjunto encontrará su factura electrónica.");
+
+        // Adjuntar PDF
+        MimeBodyPart adjunto = new MimeBodyPart();
+        adjunto.attachFile(archivoAdjunto);
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(texto);
+        multipart.addBodyPart(adjunto);
+
+        message.setContent(multipart);
+        Transport.send(message);
+
+        System.out.println("📧 Factura enviada exitosamente a: " + destinatario);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
 
     private void generateQRCodeImage(String text, int width, int height, String filePath)
             throws WriterException, IOException {
