@@ -17,7 +17,7 @@
     </properties>
 
     <dependencies>
-        <!-- Conexión a MySQL -->
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
