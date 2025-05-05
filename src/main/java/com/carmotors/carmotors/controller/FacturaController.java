@@ -128,4 +128,10 @@ public void enviarFacturaPorCorreo(String destinatario, File archivoAdjunto) {
         Path path = FileSystems.getDefault().getPath(filePath);
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
     }
+
+    public Factura obtenerDatosFactura(int idOrden) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    
 }
