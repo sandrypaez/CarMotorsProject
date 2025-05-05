@@ -69,7 +69,7 @@ public class MenuPrincipal extends JFrame {
         btnInventario.addActionListener(e -> new RepuestoView().setVisible(true));
         btnMantenimiento.addActionListener(e -> new FacturaView().setVisible(true));
         btnClientesFact.addActionListener(e -> new MainMenu().setVisible(true));
-        btnProveedores.addActionListener(e -> new FacturaView().setVisible(true));
+        btnProveedores.addActionListener(e -> new MenuComprasProvedor().setVisible(true));
         btnReportes.addActionListener(e -> new FacturaView().setVisible(true));
     }
 
