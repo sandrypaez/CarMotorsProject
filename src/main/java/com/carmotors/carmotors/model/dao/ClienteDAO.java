@@ -59,7 +59,6 @@ public class ClienteDAO {
         }
         return clients;
     }
-
     public void updateClient(Cliente client) throws SQLException {
         if (client == null) {
             throw new SQLException("Client cannot be null");
