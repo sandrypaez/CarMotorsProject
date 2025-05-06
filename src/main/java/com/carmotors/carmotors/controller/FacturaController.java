@@ -101,7 +101,7 @@ public class FacturaController {
             message.setSubject("Factura de su servicio - Motores & Ruedas");
 
             MimeBodyPart cuerpo = new MimeBodyPart();
-            cuerpo.setText("Gracias por preferirnos.\nAdjuntamos su factura electrónica.");
+            cuerpo.setText("Cordial saludo. \nAdjuntamos su factura electrónica. \nGracias por preferirnos. \n\n- CarMotors");
 
             MimeBodyPart adjuntoPDF = new MimeBodyPart();
             adjuntoPDF.attachFile(pdf);
