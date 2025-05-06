@@ -33,6 +33,7 @@ public class MainMenu extends JFrame {
 
         estilizarBoton(btnCliente);
         estilizarBoton(btnFactura);
+        estilizarBoton(btnVehiculo);
 
         panel.add(btnCliente);
         panel.add(btnVehiculo);

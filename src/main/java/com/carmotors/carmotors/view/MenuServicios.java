@@ -27,22 +27,19 @@ public class MenuServicios extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         panel.setBackground(Color.decode("#E3F2FD"));
 
-        JButton btnCliente = new JButton("👤  Registrar Servicio");
-        JButton btnFactura = new JButton("🧾  Generar Factura");
-        JButton btnVehiculo = new JButton("🧾  Registrar Vehículo");
+        JButton btnServicio = new JButton("👤  Registrar Servicio");
+        JButton btnOrden = new JButton("🧾  Registrar Orden de Servicio");
 
-        estilizarBoton(btnCliente);
-        estilizarBoton(btnFactura);
+        estilizarBoton(btnServicio);
+        estilizarBoton(btnOrden);
 
-        panel.add(btnCliente);
-        panel.add(btnVehiculo);
-        panel.add(btnFactura);
+        panel.add(btnOrden);
+        panel.add(btnServicio);
         add(panel, BorderLayout.CENTER);
 
         // Acciones
-        btnCliente.addActionListener(e -> new ClienteView().setVisible(true));
-        btnFactura.addActionListener(e -> new FacturaView().setVisible(true));
-        btnVehiculo.addActionListener(e -> new VehiculoView().setVisible(true));
+        btnServicio.addActionListener(e -> new ServicioView().setVisible(true));
+        btnOrden.addActionListener(e -> new OrdenServicioView().setVisible(true));
     }
 
     private void estilizarBoton(JButton boton) {

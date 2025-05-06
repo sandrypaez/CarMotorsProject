@@ -29,11 +29,11 @@ public class FacturaView extends JFrame {
         btnAtras.setForeground(Color.BLACK);
 
         btnAtras.addActionListener(e -> {
-            this.dispose(); // Cierra la ventana actual
-            new MenuPrincipal().setVisible(true); // Abre el menú principal
+            this.dispose();
+            new MenuPrincipal().setVisible(true);
         });
 
-        add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar
+        add(btnAtras, BorderLayout.SOUTH);
 
         JLabel titulo = new JLabel("Generar Factura", JLabel.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
@@ -69,7 +69,8 @@ public class FacturaView extends JFrame {
                 factura.setFechaEmision(new Date());
                 factura.setQrUrl("https://carmotors.com/invoice/INV-" + factura.getIdOrden());
                 controller.generarFacturaPDF(factura);
-                JOptionPane.showMessageDialog(this, "✅ Factura generada y enviada al correo: " + factura.getEmail(), "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+                String email = controller.obtenerCorreoPorOrden(idOrden);
+                JOptionPane.showMessageDialog(this, "✅ Factura generada y enviada al correo: " + (email != null && !email.isEmpty() ? email : "No disponible"), "Mensaje", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "❌ Error: " + ex.getMessage(), "Mensaje", JOptionPane.ERROR_MESSAGE);
             }

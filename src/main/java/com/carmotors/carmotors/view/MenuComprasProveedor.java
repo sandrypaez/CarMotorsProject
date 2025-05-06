@@ -5,9 +5,9 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 
-public class MenuComprasProvedor extends JFrame {
+public class MenuComprasProveedor extends JFrame {
 
-    public MenuComprasProvedor() {
+    public MenuComprasProveedor() {
         setTitle("CarMotors - Menú Principal");
         setSize(420, 300);
         setLocationRelativeTo(null);
@@ -71,6 +71,6 @@ public class MenuComprasProvedor extends JFrame {
             System.err.println("Error al aplicar estilo FlatLaf: " + e.getMessage());
         }
 
-        SwingUtilities.invokeLater(() -> new MenuComprasProvedor().setVisible(false));
+        SwingUtilities.invokeLater(() -> new MenuComprasProveedor().setVisible(false));
     }
 }
