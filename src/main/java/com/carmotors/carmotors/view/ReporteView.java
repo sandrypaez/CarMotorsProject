@@ -5,7 +5,11 @@ import com.carmotors.carmotors.model.entities.Reporte;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -18,6 +22,12 @@ public class ReporteView extends JFrame {
     private final ReporteController controller;
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel cardPanel = new JPanel(cardLayout);
+    // Define blue color palette
+    private static final Color SOFT_BLUE = new Color(173, 216, 230); // Light pastel blue
+    private static final Color VIBRANT_BLUE = new Color(30, 144, 255); // Dodger blue
+    private static final Color DEEP_BLUE = new Color(0, 51, 102); // Navy blue
+    private static final Color ACCENT_BLUE = new Color(135, 206, 250); // Sky blue
+    private static final Color HOVER_BLUE = new Color(65, 105, 225); // Royal blue
 
     public ReporteView() {
         // Initialize controller with a valid connection or handle failure
@@ -44,11 +54,29 @@ public class ReporteView extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        // Menú Principal
-        JPanel menu = new JPanel();
-        menu.setLayout(new GridLayout(6, 1, 10, 10));
+        // Toolbar with "Atrás" button
+        JToolBar toolbar = new JToolBar();
+        toolbar.setFloatable(false);
+        toolbar.setBackground(DEEP_BLUE);
+        toolbar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JButton btnAtrasMain = new JButton("⬅ Atrás");
+        estilizarBoton(btnAtrasMain);
+        btnAtrasMain.addActionListener(e -> dispose());
+        toolbar.add(btnAtrasMain);
+        add(toolbar, BorderLayout.NORTH);
+
+        // Menú Principal with gradient background
+        JPanel menu = new JPanel(new GridLayout(5, 1, 10, 10)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         menu.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        menu.setBackground(new Color(245, 245, 245));
 
         JButton btnInventario = new JButton("📦 Inventario de Repuestos");
         JButton btnMantenimiento = new JButton("🛠 Mantenimiento y Reparaciones");
@@ -56,10 +84,9 @@ public class ReporteView extends JFrame {
         JButton btnProveedores = new JButton("🚚 Proveedores");
         JButton btnCampanas = new JButton("📈 Campañas y Actividades Especiales");
 
+        // Style buttons
         for (JButton btn : new JButton[]{btnInventario, btnMantenimiento, btnClientes, btnProveedores, btnCampanas}) {
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+            estilizarBoton(btn);
             menu.add(btn);
         }
 
@@ -81,25 +108,40 @@ public class ReporteView extends JFrame {
     }
 
     private JPanel crearPanelInventario() {
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        panel.setBorder(BorderFactory.createTitledBorder("Inventario de Repuestos"));
-        panel.setBackground(Color.WHITE);
+        JPanel panel = new JPanel(new BorderLayout(10, 10)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(DEEP_BLUE),
+                "Inventario de Repuestos",
+                0, 0,
+                new Font("Segoe UI", Font.BOLD, 16),
+                DEEP_BLUE
+        ));
 
         JPanel submenu = new JPanel(new GridLayout(4, 1, 10, 10));
+        submenu.setOpaque(false);
         JButton btnListado = new JButton("Listado detallado de repuestos");
         JButton btnConsumo = new JButton("Análisis de consumo por períodos");
         JButton btnAlertas = new JButton("Alertas de productos vencidos o próximos a caducar");
         JButton btnAtras = new JButton("⬅ Atrás");
 
         for (JButton btn : new JButton[]{btnListado, btnConsumo, btnAlertas, btnAtras}) {
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            estilizarBoton(btn);
             submenu.add(btn);
         }
 
         JTextArea resultado = new JTextArea();
         resultado.setEditable(false);
+        resultado.setBackground(ACCENT_BLUE);
+        resultado.setForeground(DEEP_BLUE);
+        resultado.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(resultado);
 
         btnListado.addActionListener(e -> {
@@ -158,25 +200,40 @@ public class ReporteView extends JFrame {
     }
 
     private JPanel crearPanelMantenimiento() {
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        panel.setBorder(BorderFactory.createTitledBorder("Mantenimiento y Reparaciones"));
-        panel.setBackground(Color.WHITE);
+        JPanel panel = new JPanel(new BorderLayout(10, 10)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(DEEP_BLUE),
+                "Mantenimiento y Reparaciones",
+                0, 0,
+                new Font("Segoe UI", Font.BOLD, 16),
+                DEEP_BLUE
+        ));
 
         JPanel submenu = new JPanel(new GridLayout(4, 1, 10, 10));
+        submenu.setOpaque(false);
         JButton btnServicios = new JButton("Servicios más solicitados por tipo de vehículo");
         JButton btnProductividad = new JButton("Productividad de técnicos");
         JButton btnHistorial = new JButton("Historial de mantenimientos por cliente o vehículo");
         JButton btnAtras = new JButton("⬅ Atrás");
 
         for (JButton btn : new JButton[]{btnServicios, btnProductividad, btnHistorial, btnAtras}) {
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            estilizarBoton(btn);
             submenu.add(btn);
         }
 
         JTextArea resultado = new JTextArea();
         resultado.setEditable(false);
+        resultado.setBackground(ACCENT_BLUE);
+        resultado.setForeground(DEEP_BLUE);
+        resultado.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(resultado);
 
         btnServicios.addActionListener(e -> {
@@ -235,24 +292,39 @@ public class ReporteView extends JFrame {
     }
 
     private JPanel crearPanelClientes() {
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        panel.setBorder(BorderFactory.createTitledBorder("Clientes"));
-        panel.setBackground(Color.WHITE);
+        JPanel panel = new JPanel(new BorderLayout(10, 10)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(DEEP_BLUE),
+                "Clientes",
+                0, 0,
+                new Font("Segoe UI", Font.BOLD, 16),
+                DEEP_BLUE
+        ));
 
         JPanel submenu = new JPanel(new GridLayout(3, 1, 10, 10));
+        submenu.setOpaque(false);
         JButton btnHistorial = new JButton("Historial de servicios por cliente");
         JButton btnFrecuentes = new JButton("Clientes frecuentes y su facturación");
         JButton btnAtras = new JButton("⬅ Atrás");
 
         for (JButton btn : new JButton[]{btnHistorial, btnFrecuentes, btnAtras}) {
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            estilizarBoton(btn);
             submenu.add(btn);
         }
 
         JTextArea resultado = new JTextArea();
         resultado.setEditable(false);
+        resultado.setBackground(ACCENT_BLUE);
+        resultado.setForeground(DEEP_BLUE);
+        resultado.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(resultado);
 
         btnHistorial.addActionListener(e -> {
@@ -295,24 +367,39 @@ public class ReporteView extends JFrame {
     }
 
     private JPanel crearPanelProveedores() {
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        panel.setBorder(BorderFactory.createTitledBorder("Proveedores"));
-        panel.setBackground(Color.WHITE);
+        JPanel panel = new JPanel(new BorderLayout(10, 10)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(DEEP_BLUE),
+                "Proveedores",
+                0, 0,
+                new Font("Segoe UI", Font.BOLD, 16),
+                DEEP_BLUE
+        ));
 
         JPanel submenu = new JPanel(new GridLayout(3, 1, 10, 10));
+        submenu.setOpaque(false);
         JButton btnEvaluacion = new JButton("Evaluación de proveedores");
         JButton btnHistorial = new JButton("Historial de productos entregados por proveedor");
         JButton btnAtras = new JButton("⬅ Atrás");
 
         for (JButton btn : new JButton[]{btnEvaluacion, btnHistorial, btnAtras}) {
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            estilizarBoton(btn);
             submenu.add(btn);
         }
 
         JTextArea resultado = new JTextArea();
         resultado.setEditable(false);
+        resultado.setBackground(ACCENT_BLUE);
+        resultado.setForeground(DEEP_BLUE);
+        resultado.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(resultado);
 
         btnEvaluacion.addActionListener(e -> {
@@ -355,23 +442,38 @@ public class ReporteView extends JFrame {
     }
 
     private JPanel crearPanelCampanas() {
-        JPanel panel = new JPanel(new BorderLayout(10, 10));
-        panel.setBorder(BorderFactory.createTitledBorder("Campañas y Actividades Especiales"));
-        panel.setBackground(Color.WHITE);
+        JPanel panel = new JPanel(new BorderLayout(10, 10)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(DEEP_BLUE),
+                "Campañas y Actividades Especiales",
+                0, 0,
+                new Font("Segoe UI", Font.BOLD, 16),
+                DEEP_BLUE
+        ));
 
         JPanel submenu = new JPanel(new GridLayout(2, 1, 10, 10));
+        submenu.setOpaque(false);
         JButton btnEvaluacion = new JButton("Evaluación de campañas de mantenimiento preventivo");
         JButton btnAtras = new JButton("⬅ Atrás");
 
         for (JButton btn : new JButton[]{btnEvaluacion, btnAtras}) {
-            btn.setFocusPainted(false);
-            btn.setBackground(Color.WHITE);
-            btn.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+            estilizarBoton(btn);
             submenu.add(btn);
         }
 
         JTextArea resultado = new JTextArea();
         resultado.setEditable(false);
+        resultado.setBackground(ACCENT_BLUE);
+        resultado.setForeground(DEEP_BLUE);
+        resultado.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(resultado);
 
         btnEvaluacion.addActionListener(e -> {
@@ -395,6 +497,29 @@ public class ReporteView extends JFrame {
         panel.add(submenu, BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
         return panel;
+    }
+
+    private void estilizarBoton(JButton boton) {
+        boton.setFocusPainted(false);
+        boton.setBackground(VIBRANT_BLUE);
+        boton.setForeground(Color.WHITE);
+        boton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        boton.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(DEEP_BLUE, 1, true),
+                new EmptyBorder(10, 20, 10, 20)
+        ));
+        boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(HOVER_BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(VIBRANT_BLUE);
+            }
+        });
     }
 
     public static void main(String[] args) {

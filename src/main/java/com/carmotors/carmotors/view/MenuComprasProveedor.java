@@ -3,65 +3,119 @@ package com.carmotors.carmotors.view;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MenuComprasProveedor extends JFrame {
+    // Define blue color palette
+    private static final Color SOFT_BLUE = new Color(173, 216, 230); // Light pastel blue
+    private static final Color VIBRANT_BLUE = new Color(30, 144, 255); // Dodger blue
+    private static final Color DEEP_BLUE = new Color(0, 51, 102); // Navy blue
+    private static final Color ACCENT_BLUE = new Color(135, 206, 250); // Sky blue
+    private static final Color HOVER_BLUE = new Color(65, 105, 225); // Royal blue
 
     public MenuComprasProveedor() {
-        setTitle("CarMotors - Menú Principal");
+        setTitle("CarMotors - Menú Compras y Proveedores");
         setSize(420, 300);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setResizable(false);
+        setLayout(new BorderLayout());
+
+        // Toolbar with "Volver al Menú" button
+        JToolBar toolbar = new JToolBar();
+        toolbar.setFloatable(false);
+        toolbar.setBackground(DEEP_BLUE);
+        toolbar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JButton btnAtras = new JButton("🔙 Volver al Menú");
+        btnAtras.setFocusPainted(false);
+        btnAtras.setBackground(VIBRANT_BLUE);
+        btnAtras.setForeground(Color.WHITE);
+        btnAtras.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnAtras.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(DEEP_BLUE, 1, true),
+                new EmptyBorder(5, 10, 5, 10)
+        ));
+        btnAtras.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnAtras.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnAtras.setBackground(HOVER_BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnAtras.setBackground(VIBRANT_BLUE);
+            }
+        });
+        btnAtras.addActionListener(e -> {
+            this.dispose();
+        });
+        toolbar.add(btnAtras);
+        add(toolbar, BorderLayout.NORTH);
 
         // Encabezado
         JLabel titulo = new JLabel("🚗 CarMotors", SwingConstants.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
-        titulo.setForeground(new Color(25, 118, 210));
-        titulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 10));
-        add(titulo, BorderLayout.NORTH);
+        titulo.setForeground(DEEP_BLUE);
+        titulo.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+        add(titulo, BorderLayout.CENTER);
 
-        // Panel de botones
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(2, 1, 20, 20));
+        // Panel de botones with gradient background
+        JPanel panel = new JPanel(new GridLayout(2, 1, 20, 20)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         panel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
-        panel.setBackground(Color.decode("#E3F2FD"));
 
-        JButton btnCliente = new JButton("👤  Compras");
-        JButton btnFactura = new JButton("🧾  Proveedor");
+        // Buttons
+        JButton btnCompras = new JButton("🛒 Compras");
+        JButton btnProveedor = new JButton("🏭 Proveedor");
 
-        estilizarBoton(btnCliente);
-        estilizarBoton(btnFactura);
+        // Style buttons
+        for (JButton btn : new JButton[]{btnCompras, btnProveedor}) {
+            estilizarBoton(btn);
+            panel.add(btn);
+        }
 
-        panel.add(btnCliente);
-        panel.add(btnFactura);
-        add(panel, BorderLayout.CENTER);
+        add(panel, BorderLayout.SOUTH);
 
         // Acciones
-        btnCliente.addActionListener(e -> new ComprasView().setVisible(true));
-        btnFactura.addActionListener(e -> new ProveedorView().setVisible(true));
+        btnCompras.addActionListener(e -> new ComprasView().setVisible(true));
+        btnProveedor.addActionListener(e -> new ProveedorView().setVisible(true));
     }
 
     private void estilizarBoton(JButton boton) {
-        boton.setBackground(new Color(33, 150, 243));
+        boton.setBackground(VIBRANT_BLUE);
         boton.setForeground(Color.WHITE);
         boton.setFocusPainted(false);
         boton.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        boton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        boton.setBorder(BorderFactory.createCompoundBorder(
+                new LineBorder(DEEP_BLUE, 1, true),
+                new EmptyBorder(10, 20, 10, 20)
+        ));
         boton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        JButton btnAtras = new JButton("🔙 Volver al Menú");
-        btnAtras.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnAtras.setFocusPainted(false);
-        btnAtras.setBackground(new Color(200, 230, 201));
-        btnAtras.setForeground(Color.BLACK);
+        // Hover effect
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(HOVER_BLUE);
+            }
 
-        btnAtras.addActionListener(e -> {
-            this.dispose(); // Cierra la ventana actual
-            new MenuPrincipal().setVisible(false); // Abre el menú principal
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(VIBRANT_BLUE);
+            }
         });
-
-        add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar
-
     }
 
     public static void main(String[] args) {

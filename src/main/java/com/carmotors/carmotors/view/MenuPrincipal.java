@@ -1,10 +1,21 @@
 package com.carmotors.carmotors.view;
 
 import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MenuPrincipal extends JFrame {
+    // Define blue color palette
+    private static final Color SOFT_BLUE = new Color(173, 216, 230); // Light pastel blue
+    private static final Color VIBRANT_BLUE = new Color(30, 144, 255); // Dodger blue
+    private static final Color DEEP_BLUE = new Color(0, 51, 102); // Navy blue
+    private static final Color ACCENT_BLUE = new Color(135, 206, 250); // Sky blue
+    private static final Color HOVER_BLUE = new Color(65, 105, 225); // Royal blue
 
     public MenuPrincipal() {
         try {
@@ -19,10 +30,23 @@ public class MenuPrincipal extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // Toolbar (minimal, for consistency)
+        JToolBar toolbar = new JToolBar();
+        toolbar.setFloatable(false);
+        toolbar.setBackground(DEEP_BLUE);
+        toolbar.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        add(toolbar, BorderLayout.NORTH);
+
         // Encabezado superior
-        
-        JPanel header = new JPanel(new BorderLayout());
-        header.setBackground(new Color(25, 118, 210));
+        JPanel header = new JPanel(new BorderLayout()) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, DEEP_BLUE, 0, getHeight(), VIBRANT_BLUE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         header.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         JLabel titulo = new JLabel("🚗 CarMotors - Sistema de Gestión");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 26));
@@ -30,14 +54,19 @@ public class MenuPrincipal extends JFrame {
         titulo.setHorizontalAlignment(JLabel.CENTER);
         header.add(titulo, BorderLayout.CENTER);
         add(header, BorderLayout.NORTH);
-        
-        
 
         // Panel central con botones
-        JPanel panelBotones = new JPanel();
-        panelBotones.setBackground(new Color(250, 250, 250));
-        panelBotones.setLayout(new GridLayout(5, 1, 20, 20));
+        JPanel panelBotones = new JPanel(new GridLayout(5, 1, 20, 20)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setPaint(new GradientPaint(0, 0, SOFT_BLUE, 0, getHeight(), Color.WHITE));
+                g2d.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         panelBotones.setBorder(BorderFactory.createEmptyBorder(40, 120, 40, 120));
+        add(panelBotones, BorderLayout.CENTER);
 
         JButton btnInventario = crearBoton("📦 Gestión de Inventarios");
         JButton btnMantenimiento = crearBoton("🔧 Mantenimiento y Reparaciones");
@@ -51,16 +80,14 @@ public class MenuPrincipal extends JFrame {
         panelBotones.add(btnProveedores);
         panelBotones.add(btnReportes);
 
-        add(panelBotones, BorderLayout.CENTER);
-
         // Footer con sombra
         JPanel footer = new JPanel(new BorderLayout());
-        footer.setBackground(new Color(245, 245, 245));
-        footer.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, new Color(200, 200, 200)));
+        footer.setBackground(ACCENT_BLUE);
+        footer.setBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, DEEP_BLUE));
 
         JLabel textoFooter = new JLabel("📱 Optimizado para móviles - CarMotors © 2025", JLabel.CENTER);
         textoFooter.setFont(new Font("Segoe UI", Font.ITALIC, 12));
-        textoFooter.setForeground(Color.DARK_GRAY);
+        textoFooter.setForeground(DEEP_BLUE);
         textoFooter.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         footer.add(textoFooter, BorderLayout.CENTER);
         add(footer, BorderLayout.SOUTH);
@@ -74,23 +101,32 @@ public class MenuPrincipal extends JFrame {
     }
 
     private JButton crearBoton(String texto) {
-        
-        
         JButton boton = new JButton(texto);
         boton.setFont(new Font("Segoe UI", Font.BOLD, 18));
         boton.setFocusPainted(false);
-        boton.setBackground(new Color(227, 242, 253));
-        boton.setForeground(new Color(21, 101, 192));
+        boton.setBackground(VIBRANT_BLUE);
+        boton.setForeground(Color.WHITE);
         boton.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(100, 181, 246), 2),
-                BorderFactory.createEmptyBorder(12, 24, 12, 24)
+                new LineBorder(DEEP_BLUE, 2, true),
+                new EmptyBorder(12, 24, 12, 24)
         ));
         boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         boton.setOpaque(true);
         boton.setPreferredSize(new Dimension(250, 45));
+        // Hover effect
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBackground(HOVER_BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(VIBRANT_BLUE);
+            }
+        });
         return boton;
     }
-    
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new MenuPrincipal().setVisible(true));
