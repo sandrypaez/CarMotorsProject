@@ -4,8 +4,9 @@
  */
 package com.carmotors.carmotors.controller;
 
-import com.carmotors.carmotors.model.dao.Compras;
 import com.carmotors.carmotors.model.dao.ComprasDAO;
+import com.carmotors.carmotors.model.entities.Compras;
+
 import java.util.List;
 /**
  *

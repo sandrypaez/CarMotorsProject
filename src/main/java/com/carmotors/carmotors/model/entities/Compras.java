@@ -4,6 +4,12 @@
  */
 package com.carmotors.carmotors.model.entities;
 
+/**
+ *
+ * @author mariacamilaparrasierra
+ */
+
+
 import java.util.Date;
 
 public class Compras {
@@ -13,28 +19,68 @@ public class Compras {
     private int cantidad;
     private double precioUnitario;
     private Date fechaCompra;
-    private String estado;
+    private String estado; // Ej: "Pendiente", "Recibido", "Cancelado"
 
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    // Getters y Setters
+    public int getId() {
+        return id;
+    }
 
-    public int getProveedorId() { return proveedorId; }
-    public void setProveedorId(int proveedorId) { this.proveedorId = proveedorId; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getProducto() { return producto; }
-    public void setProducto(String producto) { this.producto = producto; }
+    public int getProveedorId() {
+        return proveedorId;
+    }
 
-    public int getCantidad() { return cantidad; }
-    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    public void setProveedorId(int proveedorId) {
+        this.proveedorId = proveedorId;
+    }
 
-    public double getPrecioUnitario() { return precioUnitario; }
-    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public String getProducto() {
+        return producto;
+    }
 
-    public Date getFechaCompra() { return fechaCompra; }
-    public void setFechaCompra(Date fechaCompra) { this.fechaCompra = fechaCompra; }
+    public void setProducto(String producto) {
+        this.producto = producto;
+    }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public int getCantidad() {
+        return cantidad;
+    }
 
-    public double getTotal() { return cantidad * precioUnitario; }
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(double precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+
+    public Date getFechaCompra() {
+        return fechaCompra;
+    }
+
+    public void setFechaCompra(Date fechaCompra) {
+        this.fechaCompra = fechaCompra;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public double getTotal() {
+        return cantidad * precioUnitario;
+    }
 }
+
+

@@ -6,7 +6,8 @@ package com.carmotors.carmotors.view;
 
 
 import com.carmotors.carmotors.controller.ComprasController;
-import com.carmotors.carmotors.model.dao.Compras;
+import com.carmotors.carmotors.model.entities.Compras;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Date;

@@ -73,6 +73,7 @@ public class ClienteView extends JFrame {
         JTextField txtId = new JTextField();
         JTextField txtTel = new JTextField();
         JTextField txtEmail = new JTextField();
+        JTextField txtDireccion = new JTextField();
         JTextField txtPuntos = new JTextField("0");
         txtPuntos.setEditable(false);
         JTextField txtDescuento = new JTextField("0.0");
@@ -83,6 +84,7 @@ public class ClienteView extends JFrame {
         panel.add(new JLabel("Identificación:")); panel.add(txtId);
         panel.add(new JLabel("Teléfono:")); panel.add(txtTel);
         panel.add(new JLabel("Email:")); panel.add(txtEmail);
+        panel.add(new JLabel("Dirección:")); panel.add(txtDireccion);
         panel.add(new JLabel("Puntos:")); panel.add(txtPuntos);
         panel.add(new JLabel("Descuento %:")); panel.add(txtDescuento);
         panel.add(new JLabel()); panel.add(btnGuardar);
@@ -94,6 +96,7 @@ public class ClienteView extends JFrame {
                 cliente.setIdentificacion(txtId.getText());
                 cliente.setTelefono(txtTel.getText());
                 cliente.setCorreoElectronico(txtEmail.getText());
+                cliente.setDireccion(txtDireccion.getText());
                 cliente.setDiscountPercentage(0.0);
                 cliente.setRewardPoints(0);
 
@@ -101,7 +104,7 @@ public class ClienteView extends JFrame {
 
                 JOptionPane.showMessageDialog(this, "✅ Cliente registrado con éxito.");
                 txtNombre.setText(""); txtId.setText(""); txtTel.setText(""); txtEmail.setText("");
-                txtPuntos.setText("0"); txtDescuento.setText("0.0");
+                txtPuntos.setText("0"); txtDescuento.setText("0.0"); txtDireccion.setText("");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this, "❌ Error: " + ex.getMessage());
             }
@@ -179,19 +182,19 @@ public class ClienteView extends JFrame {
     private JPanel crearPanelActualizar() {
         JPanel panel = new JPanel(new GridLayout(9, 2, 10, 10));
         panel.setBorder(BorderFactory.createTitledBorder("Actualizar Cliente"));
-        
+
         JButton btnAtras = new JButton("🔙 Volver al Menú");
-btnAtras.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-btnAtras.setFocusPainted(false);
-btnAtras.setBackground(new Color(200, 230, 201));
-btnAtras.setForeground(Color.BLACK);
+        btnAtras.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        btnAtras.setFocusPainted(false);
+        btnAtras.setBackground(new Color(200, 230, 201));
+        btnAtras.setForeground(Color.BLACK);
 
-btnAtras.addActionListener(e -> {
-    this.dispose(); // Cierra la ventana actual
-    new MenuPrincipal().setVisible(true); // Abre el menú principal
-});
+        btnAtras.addActionListener(e -> {
+            this.dispose(); // Cierra la ventana actual
+            new MenuPrincipal().setVisible(true); // Abre el menú principal
+        });
 
-add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar
+        add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar
 
 
         JTextField txtId = new JTextField();

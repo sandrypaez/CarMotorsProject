@@ -57,7 +57,7 @@ public class MainMenu extends JFrame {
 
         btnAtras.addActionListener(e -> {
             this.dispose(); // Cierra la ventana actual
-            new MenuPrincipal().setVisible(true); // Abre el menú principal
+            new MenuPrincipal().setVisible(false); // Abre el menú principal
         });
 
         add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar

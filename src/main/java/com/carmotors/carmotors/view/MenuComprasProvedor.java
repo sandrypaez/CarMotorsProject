@@ -57,7 +57,7 @@ public class MenuComprasProvedor extends JFrame {
 
         btnAtras.addActionListener(e -> {
             this.dispose(); // Cierra la ventana actual
-            new MenuPrincipal().setVisible(true); // Abre el menú principal
+            new MenuPrincipal().setVisible(false); // Abre el menú principal
         });
 
         add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar
@@ -71,6 +71,6 @@ public class MenuComprasProvedor extends JFrame {
             System.err.println("Error al aplicar estilo FlatLaf: " + e.getMessage());
         }
 
-        SwingUtilities.invokeLater(() -> new MenuComprasProvedor().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MenuComprasProvedor().setVisible(false));
     }
 }

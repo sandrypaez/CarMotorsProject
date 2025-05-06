@@ -18,16 +18,15 @@ public class ClienteDAO {
         if (cliente == null) {
             throw new SQLException("El cliente no puede ser nulo");
         }
-        String sql = "INSERT INTO Clientes (nombre, identificacion, telefono, correo_electronico, direccion, discount_percentage, reward_points) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Clientes (nombre, identificacion, telefono, correo_electronico, direccion, discount_percentage, reward_points) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, cliente.getNombre());
             pstmt.setString(2, cliente.getIdentificacion());
             pstmt.setString(3, cliente.getTelefono());
             pstmt.setString(4, cliente.getCorreoElectronico());
             pstmt.setString(5, cliente.getDireccion());
-            pstmt.setObject(6, cliente.getFechaCompra() != null ? Date.valueOf(cliente.getFechaCompra()) : null);
-            pstmt.setDouble(7, cliente.getDiscountPercentage());
-            pstmt.setInt(8, cliente.getRewardPoints());
+            pstmt.setDouble(6, cliente.getDiscountPercentage());
+            pstmt.setInt(7, cliente.getRewardPoints());
             pstmt.executeUpdate();
             try (ResultSet rs = pstmt.getGeneratedKeys()) {
                 if (rs.next()) {
