@@ -55,6 +55,9 @@ public class OrdenServicioView extends JFrame {
         JButton btnListar = new JButton("📑 Listar");
         JButton btnBuscar = new JButton("🔍 Buscar");
         JButton btnActualizar = new JButton("✏️ Actualizar");
+        JButton btnAtras = new JButton("⬅ Atrás");
+        btnAtras.addActionListener(e -> dispose());
+        add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar
 
         for (JButton btn : new JButton[]{btnRegistrar, btnListar, btnBuscar, btnActualizar}) {
             btn.setFocusPainted(false);

@@ -71,6 +71,6 @@ public class MenuComprasProveedor extends JFrame {
             System.err.println("Error al aplicar estilo FlatLaf: " + e.getMessage());
         }
 
-        SwingUtilities.invokeLater(() -> new MenuComprasProveedor().setVisible(false));
+        SwingUtilities.invokeLater(() -> new MenuComprasProveedor().setVisible(true));
     }
 }

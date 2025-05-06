@@ -30,7 +30,6 @@ public class FacturaView extends JFrame {
 
         btnAtras.addActionListener(e -> {
             this.dispose();
-            new MenuPrincipal().setVisible(true);
         });
 
         add(btnAtras, BorderLayout.SOUTH);

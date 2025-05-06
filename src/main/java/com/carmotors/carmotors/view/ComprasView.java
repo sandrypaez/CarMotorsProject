@@ -20,7 +20,7 @@ public class ComprasView extends JFrame {
     public ComprasView() {
         setTitle("Registro de Compras");
         setSize(400, 300);
-        setLayout(new GridLayout(6, 2, 5, 5));
+        setLayout(new GridLayout(7, 2, 5, 5));
 
         txtProveedorId = new JTextField();
         txtProducto = new JTextField();
@@ -43,6 +43,10 @@ public class ComprasView extends JFrame {
         add(btnRegistrarCompra);
 
         btnRegistrarCompra.addActionListener(e -> registrarCompra());
+
+        JButton btnAtras = new JButton("⬅ Atrás");
+        btnAtras.addActionListener(e -> dispose());
+        add(btnAtras, BorderLayout.SOUTH); // O donde lo quieras posicionar
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

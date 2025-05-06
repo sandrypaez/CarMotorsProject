@@ -173,7 +173,6 @@ public class ProveedorView extends JFrame {
 
         backButton.addActionListener(e -> {
             dispose();
-            SwingUtilities.invokeLater(() -> new MenuPrincipal().setVisible(true));
         });
 
         // Add listeners for update and delete as needed
