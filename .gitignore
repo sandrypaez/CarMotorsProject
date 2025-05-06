@@ -1,5 +1,4 @@
-# Ignora archivos sensibles
-dbconfig.properties
+
 
 # Archivos de IDE
 .idea/
