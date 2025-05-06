@@ -5,9 +5,9 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainMenu extends JFrame {
+public class MenuServicios extends JFrame {
 
-    public MainMenu() {
+    public MenuServicios() {
         setTitle("CarMotors - Menú Principal");
         setSize(420, 400);
         setLocationRelativeTo(null);
@@ -27,7 +27,7 @@ public class MainMenu extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
         panel.setBackground(Color.decode("#E3F2FD"));
 
-        JButton btnCliente = new JButton("👤  Registrar Cliente");
+        JButton btnCliente = new JButton("👤  Registrar Servicio");
         JButton btnFactura = new JButton("🧾  Generar Factura");
         JButton btnVehiculo = new JButton("🧾  Registrar Vehículo");
 
@@ -74,6 +74,6 @@ public class MainMenu extends JFrame {
             System.err.println("Error al aplicar estilo FlatLaf: " + e.getMessage());
         }
 
-        SwingUtilities.invokeLater(() -> new MainMenu().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MenuServicios().setVisible(true));
     }
 }
